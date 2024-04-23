@@ -1,0 +1,33 @@
+---
+- name: "Copy certificates. (RedHat)"
+  when: "ansible_os_family == 'RedHat'"
+  become: true
+  ansible.builtin.copy:
+    content: |
+      {{ item.value }}
+    dest: "{{ ['/etc/pki/ca-trust/source/anchors', item.key] | path_join }}.crt"
+    mode: "0644"
+    owner: "root"
+    group: "root"
+  loop: "{{ system_ca_root_certificates | dict2items }}"
+  loop_control:
+    label: "{{ item.key }}"
+  notify: "Update CA trust."
+
+- name: "Copy certificates. (Suse)"
+  when: "ansible_os_family == 'Suse'"
+  become: true
+  ansible.builtin.copy:
+    content: |
+      {{ item.value }}
+    dest: "{{ ['/etc/pki/ca-trust/source/anchors', item.key] | path_join }}.crt"
+    mode: "0644"
+    owner: "root"
+    group: "root"
+  loop: "{{ system_ca_root_certificates | dict2items }}"
+  loop_control:
+    label: "{{ item.key }}"
+  notify: "Update CA certificates."
+
+- name: "Flush handlers."
+  ansible.builtin.meta: "flush_handlers"

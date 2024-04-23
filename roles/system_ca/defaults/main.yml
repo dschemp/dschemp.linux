@@ -1,0 +1,4 @@
+---
+system_ca_root_certificates: {}
+# system_ca_root_certificates:
+#   root_ca_internal: "{{ lookup('file', 'root_ca.cer') }}"
