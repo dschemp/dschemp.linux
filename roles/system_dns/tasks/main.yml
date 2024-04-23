@@ -1,0 +1,4 @@
+---
+- name: "Fail | Not implemented yet!"
+  ansible.builtin.fail:
+    msg: "Not implemented yet!"
