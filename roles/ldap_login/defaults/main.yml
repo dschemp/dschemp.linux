@@ -1,0 +1,12 @@
+---
+# ldap_login_domain: "example.org"
+# ldap_login_server_uri: "ldap://ldap01.example.org:1389"
+
+# ldap_login_search_base: "dc=example,dc=org"
+
+ldap_login_cache_credentials: false
+
+ldap_login_access_control_enabled: false
+ldap_login_access_control_filter: "memberOf=cn=allowedusers,ou=Groups,dc=example,dc=org"
+
+ldap_login_disable_tls: false

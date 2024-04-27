@@ -1,0 +1,4 @@
+---
+ldap_login_system_packages:
+  - "sssd-ldap"
+  - "ldap-utils"

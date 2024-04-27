@@ -1,0 +1,10 @@
+---
+- name: "Verify."
+  hosts: "all,!sidecar"
+  vars:
+    ansible_user: jsmith
+    ansible_ssh_pass: johnsecret
+  tasks:
+    - name: "Assert current ID."
+      ansible.builtin.debug:
+        var: ansible_facts

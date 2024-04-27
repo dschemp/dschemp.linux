@@ -1,0 +1,68 @@
+# Example from https://ubuntu.com/server/docs/how-to-set-up-sssd-with-ldap
+
+dn: dc=example,dc=org
+objectClass: dcObject
+objectClass: organization
+o: example.org
+dc: example
+
+dn: ou=People,dc=example,dc=org
+objectClass: organizationalUnit
+ou: People
+
+dn: ou=Groups,dc=example,dc=org
+objectClass: organizationalUnit
+ou: Groups
+
+dn: uid=jsmith,ou=People,dc=example,dc=org
+objectClass: inetOrgPerson
+objectClass: posixAccount
+uid: jsmith
+cn: John Smith
+sn: Smith
+givenName: John
+mail: john@example.org
+userPassword: johnsecret
+uidNumber: 10001
+gidNumber: 10001
+loginShell: /bin/bash
+homeDirectory: /home/jsmith
+
+dn: uid=jsmith2,ou=People,dc=example,dc=org
+objectClass: inetOrgPerson
+objectClass: posixAccount
+uid: jsmith2
+cn: Jane Smith
+sn: Smith
+givenName: Jane
+mail: jane@example.org
+userPassword: janesecret
+uidNumber: 10002
+gidNumber: 10002
+loginShell: /bin/bash
+homeDirectory: /home/jsmith2
+
+dn: cn=jsmith,ou=Groups,dc=example,dc=org
+objectClass: posixGroup
+cn: jsmith
+gidNumber: 10001
+memberUid: jsmith
+
+dn: cn=SystemAdministrators,ou=Groups,dc=example,dc=org
+objectClass: posixGroup
+cn: SystemAdministrators
+gidNumber: 19999
+memberUid: jsmith
+
+dn: cn=SSHAccess,ou=Groups,dc=example,dc=org
+objectClass: posixGroup
+cn: SSHAccess
+gidNumber: 19990
+memberUid: jsmith
+
+dn: cn=Engineering,ou=Groups,dc=example,dc=org
+objectClass: posixGroup
+cn: Engineering
+gidNumber: 10100
+memberUid: jsmith
+memberUid: jsmith2

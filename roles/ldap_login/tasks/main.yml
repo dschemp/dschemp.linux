@@ -1,0 +1,27 @@
+---
+- name: "Install necessary packages."
+  become: true
+  ansible.builtin.package:
+    name: "{{ ldap_login_system_packages }}"
+    update_cache: true
+    state: "present"
+
+- name: "Setup sssd for LDAP login."
+  become: true
+  ansible.builtin.template:
+    src: "sssd.conf.j2"
+    dest: "/etc/sssd/conf.d/ldap.conf"
+    owner: "root"
+    group: "root"
+    mode: "0600"
+  notify: "Restart sssd."
+
+- name: "Enable sssd service."
+  become: true
+  ansible.builtin.service:
+    name: "sssd"
+    enabled: true
+    state: "started"
+
+- name: "Flush handlers."
+  ansible.builtin.meta: "flush_handlers"

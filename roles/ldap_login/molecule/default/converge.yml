@@ -1,0 +1,11 @@
+---
+- name: "Converge"
+  hosts: "all,!sidecar"
+  vars:
+    ldap_login_domain: "example.org"
+    ldap_login_server_uri: "ldap://ldap:1389"
+    ldap_login_search_base: "dc=example,dc=org"
+    # Disable TLS requirement for login for testing
+    ldap_login_disable_tls: true
+  roles:
+    - role: "dschemp.linux.ldap_login"

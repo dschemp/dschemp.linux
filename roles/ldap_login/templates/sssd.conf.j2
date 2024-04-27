@@ -1,0 +1,22 @@
+{{ ansible_managed | comment }}
+# See https://man.archlinux.org/man/sssd-ldap-attributes.5.en for more configuration options
+
+[sssd]
+config_file_version = 2
+domains = {{ ldap_login_domain }}
+
+[domain/{{ ldap_login_domain }}]
+id_provider       = ldap
+auth_provider     = ldap
+ldap_uri          = {{ ldap_login_server_uri }}
+ldap_search_base  = {{ ldap_login_search_base }}
+cache_credentials = {{ ldap_login_cache_credentials | bool | lower }}
+
+{% if ldap_login_access_control_enabled | bool %}
+access_provider    = ldap
+ldap_access_filter = {{ ldap_login_access_control_filter }}
+{% endif %}
+
+{% if ldap_login_disable_tls | bool %}
+ldap_auth_disable_tls_never_use_in_production = true
+{% endif %}
