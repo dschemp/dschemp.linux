@@ -1,4 +1,48 @@
 ---
-- name: "Fail | Not implemented yet!"
-  ansible.builtin.fail:
-    msg: "Not implemented yet!"
+- name: "Sanity check variables."
+  ansible.builtin.assert:
+    that:
+      - "system_dns_nameservers is defined"
+      - "system_dns_nameservers | length > 0"
+
+- name: "Disable DNS management in NetworkManager."
+  when: "ansible_os_family == 'RedHat'"
+  community.general.ini_file:
+    path: "/etc/NetworkManager/NetworkManager.conf"
+    state: "present"
+    no_extra_spaces: true
+    section: "main"
+    option: "dns"
+    value: "none"
+    owner: "root"
+    group: "root"
+    mode: 0644
+  notify:
+    - "Reload NetworkManager."
+
+- name: "Deploy resolv.conf file."
+  ansible.builtin.template:
+    src: "resolv.conf.j2"
+    dest: "/etc/resolv.conf"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  notify:
+    - "Reload NetworkManager."
+
+- name: "Set hostname with domain."
+  when:
+    - "system_dns_primary_domain is defined"
+    - "system_dns_primary_domain | length > 0"
+  ansible.builtin.hostname:
+    name: "{{ [ansible_hostname, system_dns_primary_domain] | join('.') }}"
+
+- name: "Set hostname without domain."
+  when: >
+    (system_dns_primary_domain is not defined) or
+    (system_dns_primary_domain | length == 0)
+  ansible.builtin.hostname:
+    name: "{{ ansible_hostname }}"
+
+- name: "Flush handlers."
+  ansible.builtin.meta: "flush_handlers"

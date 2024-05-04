@@ -1,0 +1,9 @@
+{{ ansible_managed | comment }}
+
+{% for dns_ns in system_dns_name_servers %}
+nameserver {{ dns_ns }}
+{% endfor %}
+
+{% if system_dns_search_domains | length > 0 %}
+search {{ system_dns_search_domains | join(' ') }}
+{% endif %}
