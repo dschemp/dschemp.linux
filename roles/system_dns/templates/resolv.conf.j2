@@ -1,6 +1,6 @@
 {{ ansible_managed | comment }}
 
-{% for dns_ns in system_dns_name_servers %}
+{% for dns_ns in system_dns_nameservers %}
 nameserver {{ dns_ns }}
 {% endfor %}
 
