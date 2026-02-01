@@ -6,7 +6,7 @@
       - "system_dns_nameservers | length > 0"
 
 - name: "Disable DNS management in NetworkManager."
-  when: "ansible_os_family == 'RedHat'"
+  when: "ansible_facts['os_family'] == 'RedHat'"
   community.general.ini_file:
     path: "/etc/NetworkManager/NetworkManager.conf"
     state: "present"
@@ -16,7 +16,7 @@
     value: "none"
     owner: "root"
     group: "root"
-    mode: 0644
+    mode: "0644"
   notify:
     - "Reload NetworkManager."
 
@@ -35,14 +35,14 @@
     - "system_dns_primary_domain is defined"
     - "system_dns_primary_domain | length > 0"
   ansible.builtin.hostname:
-    name: "{{ [ansible_hostname, system_dns_primary_domain] | join('.') }}"
+    name: "{{ [ansible_facts['hostname'], system_dns_primary_domain] | join('.') }}"
 
 - name: "Set hostname without domain."
   when: >
     (system_dns_primary_domain is not defined) or
     (system_dns_primary_domain | length == 0)
   ansible.builtin.hostname:
-    name: "{{ ansible_hostname }}"
+    name: "{{ ansible_facts['hostname'] }}"
 
 - name: "Flush handlers."
   ansible.builtin.meta: "flush_handlers"
